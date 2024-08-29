@@ -7,6 +7,8 @@ Console.WriteLine("GROUPS");
 PrintingMethods.PrintGroup(groups);
 Console.WriteLine();
 
+ProbabilityCalculator.ReadProbabilityFromJSON(groups);
+
 List<Round> rounds = MatchMethods.CreateASchedule(groups);
 Console.WriteLine("SCHEDULE");
 PrintingMethods.PrintSchedule(rounds);

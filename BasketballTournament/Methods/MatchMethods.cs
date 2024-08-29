@@ -92,13 +92,53 @@ namespace BasketballTournament.Services
         {
             match.Date = DateTime.Now;
             Random random = new Random();
-            match.HomeScore = random.Next(0, 121);
-            match.AwayScore = random.Next(0, 121);
+
+            // Verovatnoća predaje meča
+            if (random.NextDouble() <= 0.05)
+            {
+                if (random.Next(0, 2) == 0)
+                {
+                    match.HomeScore = 30;
+                    match.AwayScore = 0;
+                }
+                else
+                {
+                    match.HomeScore = 0;
+                    match.AwayScore = 30;
+                }
+            }
+            else
+            {
+                int homeBase = 60;
+                int awayBase = 60;
+
+                decimal formDifference = match.HomeTeam.Form - match.AwayTeam.Form;
+
+                if (formDifference > 0)
+                {
+                    homeBase += (int)(formDifference * 20);
+                }
+                else
+                {
+                    awayBase += (int)(-formDifference * 20);
+                }
+
+                match.HomeScore = random.Next(homeBase, homeBase + 61);
+                match.AwayScore = random.Next(awayBase, awayBase + 61);
+
+                while (match.HomeScore == match.AwayScore)
+                {
+                    match.AwayScore = random.Next(awayBase, awayBase + 61);
+                }
+            }
+
             ProbabilityCalculator.CalculateProbability(match);
+
             match.HomeTeam.Matches.Add(match);
             match.AwayTeam.Matches.Add(match);
             return match;
         }
+
 
         public static List<Round> SimulateRound(List<Round> rounds)
         {
