@@ -12,17 +12,14 @@ namespace BasketballTournament.Methods
     {
         public static void ReadProbabilityFromJSON(List<Group> groups)
         {
-            // Prvi deo: Izračunavanje Form vrednosti na osnovu FibaRanking
             foreach (var group in groups)
             {
                 foreach (var team in group.Teams)
                 {
-                    // Formula za izračunavanje Form na osnovu FibaRanking
                     team.Form = 0.3m + (0.6m - ((decimal)team.FibaRanking / 34.0m) * 0.6m);
                 }
             }
 
-            // Drugi deo: Čitanje exhibitions.json i ažuriranje Form vrednosti
             string exhibitionsPath = "C:\\Users\\bosko\\source\\repos\\BasketballTournament\\basketball-tournament-task-main\\exibitions.json";
             string exhibitionsJson = File.ReadAllText(exhibitionsPath);
 
@@ -47,7 +44,6 @@ namespace BasketballTournament.Methods
 
                                     if (teamScore > opponentScore && team.FibaRanking > opponentTeam.FibaRanking)
                                     {
-                                        // Povećaj Form za +0.05 ako je pobedio bolje rangiranog protivnika
                                         team.Form += 0.05m;
                                     }
                                 }

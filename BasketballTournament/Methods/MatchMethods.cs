@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BasketballTournament.Services
+namespace BasketballTournament.Methods
 {
     public static class MatchMethods
     {
@@ -38,11 +38,6 @@ namespace BasketballTournament.Services
                             matchAssigned = true;
                             break;
                         }
-                    }
-
-                    if (!matchAssigned)
-                    {
-                        throw new InvalidOperationException("Could not assign match to any round.");
                     }
                 }
 
@@ -93,7 +88,6 @@ namespace BasketballTournament.Services
             match.Date = DateTime.Now;
             Random random = new Random();
 
-            // Verovatnoća predaje meča
             if (random.NextDouble() <= 0.05)
             {
                 if (random.Next(0, 2) == 0)

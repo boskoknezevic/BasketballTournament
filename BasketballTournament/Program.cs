@@ -1,69 +1,72 @@
 ﻿using BasketballTournament.Methods;
 using BasketballTournament.Models;
-using BasketballTournament.Services;
+using static BasketballTournament.Methods.ImportTeams;
+using static BasketballTournament.Methods.PrintingMethods;
+using static BasketballTournament.Methods.ProbabilityCalculator;
+using static BasketballTournament.Methods.MatchMethods;
+using static System.Console;
 
-List<Group> groups = ImportTeams.ImportTeamsFromJSON();
-Console.WriteLine("GROUPS");
-PrintingMethods.PrintGroup(groups);
-Console.WriteLine();
+List<Group> groups = ImportTeamsFromJSON();
+WriteLine("GROUPS");
+PrintGroup(groups);
+WriteLine();
 
-ProbabilityCalculator.ReadProbabilityFromJSON(groups);
+ReadProbabilityFromJSON(groups);
 
-List<Round> rounds = MatchMethods.CreateASchedule(groups);
-Console.WriteLine("SCHEDULE");
-PrintingMethods.PrintSchedule(rounds);
-Console.WriteLine();
+List<Round> rounds = CreateASchedule(groups);
+WriteLine("SCHEDULE");
+PrintSchedule(rounds);
+WriteLine();
 
-rounds = MatchMethods.SimulateRound(rounds);
-Console.WriteLine("SIMULATED GROUP STAGE");
-PrintingMethods.PrintSchedule(rounds);
-Console.WriteLine();
+rounds = SimulateRound(rounds);
+WriteLine("SIMULATED GROUP STAGE");
+PrintSchedule(rounds);
+WriteLine();
 
-Console.WriteLine("TABLES");
-var allGroupStats = MatchMethods.CalculateAllGroupStatistics(groups);
+WriteLine("TABLES");
+var allGroupStats = CalculateAllGroupStatistics(groups);
 foreach (var group in allGroupStats)
 {
-    PrintingMethods.PrintStatistics(group);
-    Console.WriteLine();
+    PrintStatistics(group);
+    WriteLine();
 }
-Console.WriteLine();
+WriteLine();
 
+AdvanceFromGroups(groups, allGroupStats);
+PrintGroup(groups);
 
-MatchMethods.AdvanceFromGroups(groups, allGroupStats);
-PrintingMethods.PrintGroup(groups);
+WriteLine("QUALIFIED TEAMS");
+PrintQualifiedTeams(groups);
+var newGroups = CalculateTop8(groups, allGroupStats);
 
-Console.WriteLine("QUALIFIED TEAMS");
-PrintingMethods.PrintQualifiedTeams(groups);
-var newGroups = MatchMethods.CalculateTop8(groups, allGroupStats);
+WriteLine("BEST 8 STATISTICS");
+PrintGroup(newGroups);
+WriteLine("BEST 8");
+PrintQualifiedTeams(newGroups);
 
-Console.WriteLine("BEST 8 STATISTICS");
-PrintingMethods.PrintGroup(newGroups);
-Console.WriteLine("BEST 8");
-PrintingMethods.PrintQualifiedTeams(newGroups);
+var pots = CreateKnockoutGroups(newGroups);
+PrintQualifiedTeams(pots);
+WriteLine();
 
-var pots = MatchMethods.CreateKnockoutGroups(newGroups);
-PrintingMethods.PrintQualifiedTeams(pots);
-Console.WriteLine();
+var quarterFinalMatches = CreateQuarterFinals(pots);
+PrintSchedule(quarterFinalMatches);
 
-var quarterFinalMatches = MatchMethods.CreateQuarterFinals(pots);
-PrintingMethods.PrintSchedule(quarterFinalMatches);
+var simulatedQuarterFinal = SimulateRound(quarterFinalMatches);
+PrintSchedule(simulatedQuarterFinal);
+WriteLine();
 
-var simulatedQuarterFinal = MatchMethods.SimulateRound(quarterFinalMatches);
-PrintingMethods.PrintSchedule(simulatedQuarterFinal);
-Console.WriteLine();
+var semiFinals = CreateSemiFinals(quarterFinalMatches);
+PrintSchedule(semiFinals);
 
-var semiFinals = MatchMethods.CreateSemiFinals(quarterFinalMatches);
-PrintingMethods.PrintSchedule(semiFinals);
+var simulatedSemiFinals = SimulateRound(semiFinals);
+PrintSchedule(simulatedSemiFinals);
+WriteLine();
 
-var simulatedSemiFinals = MatchMethods.SimulateRound(semiFinals);
-PrintingMethods.PrintSchedule(simulatedSemiFinals);
-Console.WriteLine();
+var finals = CreateFinalsAndThirdPlaceGame(semiFinals);
+PrintSchedule(finals);
 
-var finals = MatchMethods.CreateFinalsAndThirdPlaceGame(semiFinals);
-PrintingMethods.PrintSchedule(finals);
+var simulatedFinals = SimulateRound(finals);
+PrintSchedule(simulatedFinals);
+WriteLine();
 
-var simulatedFinals = MatchMethods.SimulateRound(finals);
-PrintingMethods.PrintSchedule(simulatedFinals);
-Console.WriteLine();
-
-PrintingMethods.PrintTheMedals(simulatedFinals);
+PrintTheMedals(simulatedFinals);
